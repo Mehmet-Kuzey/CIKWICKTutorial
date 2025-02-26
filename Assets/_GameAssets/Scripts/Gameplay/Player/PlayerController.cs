@@ -1,8 +1,10 @@
 using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
+    public event Action OnPlayerJumped;
+    
 
     [Header("References")]
     [SerializeField] private Transform _orientationTransform;
@@ -51,7 +53,7 @@ public class Player : MonoBehaviour
         _playerRigidbody.freezeRotation = true;
     }
 
-    private void Update()
+        private void Update()
     {
         SetInputs();
         SetStates();
@@ -64,6 +66,8 @@ public class Player : MonoBehaviour
     {
        SetPlayerMovement(); 
     }
+
+    
     private void SetInputs()
     {
         _horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -145,7 +149,8 @@ public class Player : MonoBehaviour
 
 
     private void SetPlayerJumping()
-    {       
+    {     
+            OnPlayerJumped?.Invoke();
             _playerRigidbody.linearVelocity = new Vector3 (_playerRigidbody.linearVelocity.x, 0f, _playerRigidbody.linearVelocity.z);
             _playerRigidbody.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
     }
